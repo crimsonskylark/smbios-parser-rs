@@ -2,7 +2,7 @@
 mod tests {
     const SMBIOS_TABLE_SIGNATURE: u32 = 0x52534D42;
 
-    use crate::parser::tables::{Header, Table, Type0};
+    use crate::parser::tables::{Header, Type0};
     use std::{alloc, io::Cursor, ops::Add};
     use windows_sys::Win32::System;
 
@@ -32,18 +32,5 @@ mod tests {
 
         const TABLE_DATA_START: usize = 8 as usize;
         let data = &b[TABLE_DATA_START..];
-
-        let current_table = Table::new(data).expect("unable to parse table");
-        let string_table = current_table
-            .build_string_table(&data[current_table.len()..])
-            .unwrap();
-
-        let data = &data[current_table.total_len(&string_table)..];
-
-        let t1 = Table::new(&data[..]).expect("unable to parse table");
-        let string_table = t1.build_string_table(&data[t1.len()..]).unwrap();
-        let total_len = t1.total_len(&string_table);
-
-        println!("total: {:?} table: {:#?}", total_len, t1);
     }
 }
